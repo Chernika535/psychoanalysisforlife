@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Психоаналитическое самопознание</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #2c3e50;
+            padding: 20px 16px;
+            text-align: center;
+            margin: -16px -16px 20px -16px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            background: rgba(44, 62, 80, 0.2);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #FF8C00;
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 12px 6px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--tg-theme-hint-color, #999);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #FFD700;
+            color: #2c3e50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--tg-theme-hint-color, #ddd);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--tg-theme-bg-color, white);
+            color: var(--tg-theme-text-color, #000);
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .textarea {
+            min-height: 80px;
+        }
+
+        .scale-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .scale-slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--tg-theme-hint-color, #ddd);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .scale-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FFD700;
+            cursor: pointer;
+        }
+
+        .scale-value {
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+            color: #FF8C00;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--tg-theme-hint-color, #ddd);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox.checked {
+            background: #FFD700;
+            border-color: #FFD700;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: #2c3e50;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: #FFD700;
+            color: #2c3e50;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .daily-tracker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            border: 1px solid var(--tg-theme-hint-color, #ddd);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day-cell.completed {
+            background: #FFD700;
+            color: #2c3e50;
+            border-color: #FFD700;
+        }
+
+        .day-cell.current {
+            background: #FFF3CD;
+            border-color: #FF8C00;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .stat-card {
+            background: var(--tg-theme-bg-color, white);
+            border: 1px solid var(--tg-theme-hint-color, #ddd);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF8C00;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #666);
+            margin-top: 4px;
+        }
+
+        .journal-entry {
+            background: var(--tg-theme-bg-color, white);
+            border: 1px solid #FFD700;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .journal-date {
+            font-size: 12px;
+            color: #FF8C00;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .journal-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .journal-type {
+            display: inline-block;
+            background: #FFD700;
+            color: #2c3e50;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .weekly-summary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #2c3e50;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .summary-section {
+            margin-bottom: 12px;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            color: var(--tg-theme-text-color, #000);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: #FFD700;
+            color: #2c3e50;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #FFD700;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .no-entries {
+            text-align: center;
+            color: var(--tg-theme-hint-color, #999);
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #2c3e50;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .emergency-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .breathing-guide {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #2c3e50;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .breathing-circle {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #2c3e50;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .technique-card {
+            background: var(--tg-theme-bg-color, white);
+            border: 1px solid var(--tg-theme-hint-color, #ddd);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .technique-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .header {
+                margin: -12px -12px 16px -12px;
+                padding: 16px 12px;
+            }
+            
+            .tab-btn {
+                font-size: 10px;
+                padding: 10px 4px;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Рабочая тетрадь самопознания</h1>
+            <p>Трансформация внутренних барьеров в жизненные достижения</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">Главная</button>
+            <button class="tab-btn" onclick="switchTab('journal')">Журнал</button>
+            <button class="tab-btn" onclick="switchTab('summaries')">Сводки</button>
+            <button class="tab-btn" onclick="switchTab('diagnosis')">Диагностика</button>
+            <button class="tab-btn" onclick="switchTab('defense')">Защиты</button>
+            <button class="tab-btn" onclick="switchTab('symbols')">Символы</button>
+            <button class="tab-btn" onclick="switchTab('plan')">План</button>
+            <button class="tab-btn" onclick="switchTab('emergency')">SOS</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="section">
+                <div class="section-title">Ваш прогресс</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedDays">0</div>
+                        <div class="stat-label">Дней практики</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Текущая серия</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgAnxiety">-</div>
+                        <div class="stat-label">Средняя тревога</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedExercises">0</div>
+                        <div class="stat-label">Упражнений</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Ежедневный трекер</div>
+                <div class="daily-tracker" id="dailyTracker"></div>
+                
+                <div class="input-group">
+                    <label class="input-label">Уровень тревоги сегодня (1-10)</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="todayAnxiety">
+                        <span>10</span>
+                        <div class="scale-value" id="anxietyValue">5</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Заметки дня</label>
+                    <textarea class="input-field textarea" id="todayNotes" placeholder="Что важного заметили сегодня?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveDailyEntry()">Сохранить запись дня</button>
+            </div>
+        </div>
+
+        <!-- Journal Tab -->
+        <div id="journal" class="tab-content">
+            <div class="section">
+                <div class="section-title">Журнал всех записей</div>
+                
+                <input type="text" class="search-box" id="journalSearch" placeholder="🔍 Поиск по записям..." oninput="filterJournal()">
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterJournalByType('all')">Все</button>
+                    <button class="filter-btn" onclick="filterJournalByType('daily')">Ежедневные</button>
+                    <button class="filter-btn" onclick="filterJournalByType('defense')">Защиты</button>
+                    <button class="filter-btn" onclick="filterJournalByType('symbols')">Символы</button>
+                    <button class="filter-btn" onclick="filterJournalByType('diagnosis')">Диагностика</button>
+                </div>
+                
+                <div id="journalEntries">
+                    <div class="no-entries">Записей пока нет. Начните заполнять разделы!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Summaries Tab -->
+        <div id="summaries" class="tab-content">
+            <div class="section">
+                <div class="section-title">Еженедельные сводки</div>
+                <p style="margin-bottom: 16px;">Автоматические сводки всех ваших записей за неделю для лучшего понимания динамики.</p>
+                
+                <button class="btn" onclick="generateWeeklySummary()">📊 Создать сводку за эту неделю</button>
+                
+                <div id="weeklySummaries">
+                    <div class="no-entries">Сводок пока нет. Создайте первую!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagnosis Tab -->
+        <div id="diagnosis" class="tab-content">
+            <div class="section">
+                <div class="section-title">Карта текущей жизни</div>
+                <p style="margin-bottom: 16px;">Оцените удовлетворенность по шкале 1-10:</p>
+                
+                <div class="input-group">
+                    <label class="input-label">Карьера и профессия</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="careerSat">
+                        <span>10</span>
+                        <div class="scale-value" id="careerValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="careerNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Отношения (романтические)</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="relationshipSat">
+                        <span>10</span>
+                        <div class="scale-value" id="relationshipValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="relationshipNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Семья и друзья</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="familySat">
+                        <span>10</span>
+                        <div class="scale-value" id="familyValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="familyNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Здоровье и энергия</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="healthSat">
+                        <span>10</span>
+                        <div class="scale-value" id="healthValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="healthNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Финансы</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="financeSat">
+                        <span>10</span>
+                        <div class="scale-value" id="financeValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="financeNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Личностный рост</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="growthSat">
+                        <span>10</span>
+                        <div class="scale-value" id="growthValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="growthNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Творчество и хобби</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="creativitySat">
+                        <span>10</span>
+                        <div class="scale-value" id="creativityValue">5</div>
+                    </div>
+                    <textarea class="input-field" id="creativityNotes" placeholder="Что не устраивает..."></textarea>
+                </div>
+
+                <button class="btn" onclick="saveDiagnosis()">Сохранить диагностику</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Застрявшие цели</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Цель 1</label>
+                    <input type="text" class="input-field" id="goal1" placeholder="Цель, которая не движется...">
+                    <input type="text" class="input-field" id="goal1Time" placeholder="Как долго не движется?" style="margin-top: 8px;">
+                    <textarea class="input-field" id="goal1Reasons" placeholder="Формальные причины..." style="margin-top: 8px;"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Цель 2</label>
+                    <input type="text" class="input-field" id="goal2" placeholder="Цель, которая не движется...">
+                    <input type="text" class="input-field" id="goal2Time" placeholder="Как долго не движется?" style="margin-top: 8px;">
+                    <textarea class="input-field" id="goal2Reasons" placeholder="Формальные причины..." style="margin-top: 8px;"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Цель 3</label>
+                    <input type="text" class="input-field" id="goal3" placeholder="Цель, которая не движется...">
+                    <input type="text" class="input-field" id="goal3Time" placeholder="Как долго не движется?" style="margin-top: 8px;">
+                    <textarea class="input-field" id="goal3Reasons" placeholder="Формальные причины..." style="margin-top: 8px;"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveGoals()">Сохранить цели</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Первые гипотезы о барьерах</div>
+                
+                <div class="input-group">
+                    <label class="input-label">К цели 1 - что останавливает эмоционально</label>
+                    <textarea class="input-field" id="barrier1Hypothesis" placeholder="Что внутри вас может мешать достичь этой цели?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">К цели 2 - что останавливает эмоционально</label>
+                    <textarea class="input-field" id="barrier2Hypothesis" placeholder="Что внутри вас может мешать достичь этой цели?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">К цели 3 - что останавливает эмоционально</label>
+                    <textarea class="input-field" id="barrier3Hypothesis" placeholder="Что внутри вас может мешать достичь этой цели?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveBarrierHypotheses()">Сохранить гипотезы</button>
+            </div>
+        </div>
+
+        <!-- Defense Tab -->
+        <div id="defense" class="tab-content">
+            <div class="section">
+                <div class="section-title">Дневник защитных реакций</div>
+                <p style="margin-bottom: 16px;">Отслеживайте моменты дискомфорта и свои реакции:</p>
+                
+                <div class="input-group">
+                    <label class="input-label">Ситуация, вызвавшая дискомфорт</label>
+                    <textarea class="input-field" id="defenseReason" placeholder="Что произошло?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Ваша первая реакция</label>
+                    <textarea class="input-field" id="defenseReaction" placeholder="Что подумали/сделали первым делом?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Объяснение, которое сразу появилось</label>
+                    <textarea class="input-field" id="defenseExplanation" placeholder="Как объяснили себе свою реакцию?"></textarea>
+                </div>
+
+                <button class="btn" onclick="addDefenseEntry()">Добавить запись</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Анализ ваших защит</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Какие защиты используете чаще всего?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('denial')" id="denialCheck"></div>
+                            <span>Отрицание ("Все нормально")</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('projection')" id="projectionCheck"></div>
+                            <span>Проекция ("Они виноваты")</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('rationalization')" id="rationalizationCheck"></div>
+                            <span>Рационализация ("У меня есть причины")</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('avoidance')" id="avoidanceCheck"></div>
+                            <span>Избегание ("Лучше не рисковать")</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('regression')" id="regressionCheck"></div>
+                            <span>Регрессия ("Пусть кто-то другой решает")</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('displacement')" id="displacementCheck"></div>
+                            <span>Замещение (злость на слабых вместо сильных)</span>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox" onclick="toggleCheckbox('sublimation')" id="sublimationCheck"></div>
+                            <span>Сублимация (направление энергии в творчество)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Главная защитная реакция</label>
+                    <input type="text" class="input-field" id="mainDefense" placeholder="Самая частая защита...">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">От чего именно она защищает</label>
+                    <textarea class="input-field" id="defenseFunction" placeholder="Какой страх или боль скрывается за защитой?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveDefenseAnalysis()">Сохранить анализ</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Эксперимент с альтернативой</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Альтернативная реакция</label>
+                    <textarea class="input-field" id="alternativeReaction" placeholder="Что будете делать вместо привычного?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">План эксперимента на неделю</label>
+                    <input type="text" class="input-field" id="experimentSituation" placeholder="В какой ситуации попробуете?">
+                    <input type="text" class="input-field" id="experimentAction" placeholder="Конкретное действие" style="margin-top: 8px;">
+                    <input type="date" class="input-field" id="experimentDate" style="margin-top: 8px;">
+                </div>
+
+                <button class="btn" onclick="startExperiment()">Начать эксперимент</button>
+            </div>
+        </div>
+
+        <!-- Symbols Tab -->
+        <div id="symbols" class="tab-content">
+            <div class="section">
+                <div class="section-title">Символический дневник</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Сегодняшний сон</label>
+                    <textarea class="input-field" id="todayDream" placeholder="Что снилось? (даже фрагменты)"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эмоция от сна</label>
+                    <input type="text" class="input-field" id="dreamEmotion" placeholder="Что чувствовали во сне и после?">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Оговорки, забывчивость</label>
+                    <textarea class="input-field" id="slipsOfTongue" placeholder="Что сказали не то или забыли?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Что привлекло внимание</label>
+                    <textarea class="input-field" id="attentionGrabbed" placeholder="Что заметили, заинтересовало без причины?"></textarea>
+                </div>
+
+                <button class="btn" onclick="addSymbolEntry()">Добавить запись дня</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Анализ повторяющихся символов</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Повторяющиеся образы в снах</label>
+                    <textarea class="input-field" id="repeatingDreamImages" placeholder="Какие образы снятся регулярно?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Повторяющиеся темы оговорок</label>
+                    <textarea class="input-field" id="repeatingSlips" placeholder="О чем часто говорите не то?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Что постоянно привлекает внимание</label>
+                    <textarea class="input-field" id="repeatingAttention" placeholder="Что регулярно замечаете?"></textarea>
+                </div>
+
+                <button class="btn" onclick="analyzeSymbols()">Проанализировать символы</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Расшифровка символа</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Выбранный символ для анализа</label>
+                    <input type="text" class="input-field" id="selectedSymbol" placeholder="Самый яркий повторяющийся символ">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эмоциональная суть символа</label>
+                    <textarea class="input-field" id="symbolEmotion" placeholder="Что чувствуете, думая об этом символе?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Где в жизни испытываете похожие чувства</label>
+                    <textarea class="input-field" id="symbolParallel" placeholder="В каких ситуациях возникают такие же эмоции?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Гипотеза о значении</label>
+                    <textarea class="input-field" id="symbolHypothesis" placeholder="Этот символ отражает мою потребность в... и указывает на то, что..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эксперимент для проверки</label>
+                    <textarea class="input-field" id="symbolExperiment" placeholder="Что конкретно сделаете на этой неделе для проверки гипотезы?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveSymbolAnalysis()">Сохранить анализ символа</button>
+            </div>
+        </div>
+
+        <!-- Plan Tab -->
+        <div id="plan" class="tab-content">
+            <div class="section">
+                <div class="section-title">Выбор барьера для работы</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Барьер 1</label>
+                    <select class="input-field" id="barrier1Type">
+                        <option value="">Выберите тип</option>
+                        <option value="fear">Страх</option>
+                        <option value="restriction">Внутренний запрет</option>
+                        <option value="role">Застывшая роль</option>
+                    </select>
+                    <textarea class="input-field" id="barrier1Description" placeholder="Описание барьера" style="margin-top: 8px;"></textarea>
+                    <label class="input-label" style="margin-top: 12px;">Готовность работать (1-10)</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="barrier1Readiness">
+                        <span>10</span>
+                        <div class="scale-value" id="barrier1Value">5</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Барьер 2</label>
+                    <select class="input-field" id="barrier2Type">
+                        <option value="">Выберите тип</option>
+                        <option value="fear">Страх</option>
+                        <option value="restriction">Внутренний запрет</option>
+                        <option value="role">Застывшая роль</option>
+                    </select>
+                    <textarea class="input-field" id="barrier2Description" placeholder="Описание барьера" style="margin-top: 8px;"></textarea>
+                    <label class="input-label" style="margin-top: 12px;">Готовность работать (1-10)</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="barrier2Readiness">
+                        <span>10</span>
+                        <div class="scale-value" id="barrier2Value">5</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Барьер 3</label>
+                    <select class="input-field" id="barrier3Type">
+                        <option value="">Выберите тип</option>
+                        <option value="fear">Страх</option>
+                        <option value="restriction">Внутренний запрет</option>
+                        <option value="role">Застывшая роль</option>
+                    </select>
+                    <textarea class="input-field" id="barrier3Description" placeholder="Описание барьера" style="margin-top: 8px;"></textarea>
+                    <label class="input-label" style="margin-top: 12px;">Готовность работать (1-10)</label>
+                    <div class="scale-input">
+                        <span>1</span>
+                        <input type="range" class="scale-slider" min="1" max="10" value="5" id="barrier3Readiness">
+                        <span>10</span>
+                        <div class="scale-value" id="barrier3Value">5</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Выбранный барьер для интенсивной работы</label>
+                    <input type="text" class="input-field" id="chosenBarrier" placeholder="Какой барьер выбираете?">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Почему именно этот</label>
+                    <textarea class="input-field" id="barrierReason" placeholder="Обоснование выбора"></textarea>
+                </div>
+
+                <button class="btn" onclick="chooseBarrier()">Выбрать для работы</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Месячный план трансформации</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Фокус месяца</label>
+                    <input type="text" class="input-field" id="monthFocus" placeholder="Над чем работаем этот месяц?">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 1 - Действие</label>
+                    <input type="text" class="input-field" id="week1Action" placeholder="Конкретное действие">
+                    <input type="date" class="input-field" id="week1Deadline" style="margin-top: 8px;">
+                    <input type="text" class="input-field" id="week1Success" placeholder="Критерий успеха" style="margin-top: 8px;">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 2 - Действие</label>
+                    <input type="text" class="input-field" id="week2Action" placeholder="Конкретное действие">
+                    <input type="date" class="input-field" id="week2Deadline" style="margin-top: 8px;">
+                    <input type="text" class="input-field" id="week2Success" placeholder="Критерий успеха" style="margin-top: 8px;">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 3 - Действие</label>
+                    <input type="text" class="input-field" id="week3Action" placeholder="Конкретное действие">
+                    <input type="date" class="input-field" id="week3Deadline" style="margin-top: 8px;">
+                    <input type="text" class="input-field" id="week3Success" placeholder="Критерий успеха" style="margin-top: 8px;">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 4 - Действие</label>
+                    <input type="text" class="input-field" id="week4Action" placeholder="Конкретное действие">
+                    <input type="date" class="input-field" id="week4Deadline" style="margin-top: 8px;">
+                    <input type="text" class="input-field" id="week4Success" placeholder="Критерий успеха" style="margin-top: 8px;">
+                </div>
+
+                <button class="btn" onclick="saveMonthlyPlan()">Сохранить план месяца</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Система поддержки</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Кто в курсе ваших экспериментов</label>
+                    <input type="text" class="input-field" id="supportPerson" placeholder="Имя человека поддержки">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Напоминания о новых реакциях</label>
+                    <textarea class="input-field" id="reminders" placeholder="Как будете напоминать себе о новом поведении?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">План при срывах</label>
+                    <textarea class="input-field" id="relapsePlan" placeholder="Что делать, если вернетесь к старым паттернам?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveSupportSystem()">Сохранить систему поддержки</button>
+            </div>
+        </div>tab-        <!-- Symbols Tab -->
+        <div id="symbols" class="tab-content">
+            <div class="section">
+                <div class="section-title">Символический дневник</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Сегодняшний сон</label>
+                    <textarea class="input-field" id="todayDream" placeholder="Что снилось? (даже фрагменты)"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эмоция от сна</label>
+                    <input type="text" class="input-field" id="dreamEmotion" placeholder="Что чувствовали во сне и после?">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Оговорки, забывчивость</label>
+                    <textarea class="input-field" id="slipsOfTongue" placeholder="Что сказали не то или забыли?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Что привлекло внимание</label>
+                    <textarea class="input-field" id="attentionGrabbed" placeholder="Что заметили, заинтересовало без причины?"></textarea>
+                </div>
+
+                <button class="btn" onclick="addSymbolEntry()">Добавить запись дня</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Анализ повторяющихся символов</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Повторяющиеся образы в снах</label>
+                    <textarea class="input-field" id="repeatingDreamImages" placeholder="Какие образы снятся регулярно?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Повторяющиеся темы оговорок</label>
+                    <textarea class="input-field" id="repeatingSlips" placeholder="О чем часто говорите не то?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Что постоянно привлекает внимание</label>
+                    <textarea class="input-field" id="repeatingAttention" placeholder="Что регулярно замечаете?"></textarea>
+                </div>
+
+                <button class="btn" onclick="analyzeSymbols()">Проанализировать символы</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Расшифровка символа</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Выбранный символ для анализа</label>
+                    <input type="text" class="input-field" id="selectedSymbol" placeholder="Самый яркий повторяющийся символ">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эмоциональная суть символа</label>
+                    <textarea class="input-field" id="symbolEmotion" placeholder="Что чувствуете, думая об этом символе?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Где в жизни испытываете похожие чувства</label>
+                    <textarea class="input-field" id="symbolParallel" placeholder="В каких ситуациях возникают такие же эмоции?"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Гипотеза о значении</label>
+                    <textarea class="input-field" id="symbolHypothesis" placeholder="Этот символ отражает мою потребность в... и указывает на то, что..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Эксперимент для проверки</label>
+                    <textarea class="input-field" id="symbolExperiment" placeholder="Что конкретно сделаете на этой неделе для проверки гипотезы?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveSymbolAnalysis()">Сохранить анализ символа</button>
+            </div>
+        </div>
+
+        <!-- Plan Tab -->
+        <div id="plan" class="tab-content">
+            <div class="section">
+                <div class="section-title">Месячный план</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Фокус месяца</label>
+                    <input type="text" class="input-field" id="monthFocus" placeholder="Над чем работаем?">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 1 - Действие</label>
+                    <input type="text" class="input-field" id="week1Action" placeholder="Конкретное действие">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Неделя 2 - Действие</label>
+                    <input type="text" class="input-field" id="week2Action" placeholder="Конкретное действие">
+                </div>
+
+                <button class="btn" onclick="saveMonthlyPlan()">Сохранить план</button>
+            </div>
+        </div>
+
+        <!-- Emergency Tab -->
+        <div id="emergency" class="tab-content">
+            <div class="section">
+                <div class="section-title">SOS: Экстренная помощь</div>
+                
+                <button class="emergency-btn" onclick="startBreathingExercise()">🫁 Дыхательная техника 4-7-8</button>
+                <button class="emergency-btn" onclick="show54321Technique()">🧠 Техника заземления 5-4-3-2-1</button>
+                <button class="emergency-btn" onclick="showSelfCompassion()">💝 Практика самосострадания</button>
+                <button class="emergency-btn" onclick="showProgressReminder()">📈 Напоминание о прогрессе</button>
+                <button class="emergency-btn" onclick="showBodyRelaxation()">🧘‍♀️ Прогрессивная релаксация</button>
+            </div>
+
+            <div class="breathing-guide" id="breathingGuide" style="display: none;">
+                <h3>Дыхательная техника 4-7-8</h3>
+                <div class="breathing-circle" id="breathingCircle">Вдох 4</div>
+                <p>Следуйте инструкциям в круге</p>
+                <button class="btn btn-secondary" onclick="stopBreathingExercise()">Остановить</button>
+            </div>
+
+            <div class="technique-card" id="technique54321" style="display: none;">
+                <div class="technique-title">Техника заземления 5-4-3-2-1</div>
+                <p><strong>Назовите:</strong></p>
+                <ul>
+                    <li>5 вещей, которые вы ВИДИТЕ</li>
+                    <li>4 вещи, которые вы СЛЫШИТЕ</li>
+                    <li>3 вещи, которые можете ПОТРОГАТЬ</li>
+                    <li>2 запаха, которые ЧУВСТВУЕТЕ</li>
+                    <li>1 вкус, который можете РАЗЛИЧИТЬ</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="hide54321Technique()">Закрыть</button>
+            </div>
+
+            <div class="technique-card" id="selfCompassionCard" style="display: none;">
+                <div class="technique-title">Практика самосострадания</div>
+                <p><strong>Скажите себе:</strong></p>
+                <ul>
+                    <li>"Сейчас мне трудно, и это нормально"</li>
+                    <li>"Трудности — это часть человеческого опыта"</li>
+                    <li>"Я отношусь к себе с добротой и пониманием"</li>
+                    <li>"Что бы я сказал лучшему другу в такой ситуации?"</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="hideSelfCompassion()">Закрыть</button>
+            </div>
+
+            <div class="technique-card" id="bodyRelaxationCard" style="display: none;">
+                <div class="technique-title">Прогрессивная мышечная релаксация</div>
+                <p><strong>Поочередно напрягайте и расслабляйте:</strong></p>
+                <ol>
+                    <li>Сожмите кулаки на 5 секунд, затем расслабьте</li>
+                    <li>Напрягите мышцы лица, затем расслабьте</li>
+                    <li>Поднимите плечи к ушам, затем опустите</li>
+                    <li>Напрягите живот, затем расслабьте</li>
+                    <li>Напрягите ноги, затем расслабьте</li>
+                </ol>
+                <button class="btn btn-secondary" onclick="hideBodyRelaxation()">Закрыть</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Кризисные контакты</div>
+                
+                <div class="input-group">
+                    <label class="input-label">Человек поддержки</label>
+                    <input type="text" class="input-field" id="emergencyContact" placeholder="Имя и телефон">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Профессиональная помощь</label>
+                    <input type="text" class="input-field" id="professionalContact" placeholder="Психолог/терапевт">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Горячая линия</label>
+                    <input type="text" class="input-field" id="hotlineContact" placeholder="Телефон доверия">
+                </div>
+
+                <button class="btn" onclick="saveEmergencyContacts()">Сохранить контакты</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Экспорт данных</div>
+                <p style="margin-bottom: 16px;">Сохраните свои записи для работы с психологом или личного архива:</p>
+                
+                <button class="btn btn-secondary" onclick="exportData()">📄 Экспортировать все данные</button>
+                <button class="btn btn-secondary" onclick="exportProgress()" style="margin-top: 8px;">📊 Экспортировать отчет о прогрессе</button>
+                <button class="btn btn-secondary" onclick="exportJournalOnly()" style="margin-top: 8px;">📝 Экспортировать только журнал</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast for notifications -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Initialize Telegram WebApp
+        let tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        // Data storage
+        let appData = {
+            progress: {
+                completedDays: 0,
+                currentStreak: 0,
+                completedExercises: 0,
+                dailyEntries: [],
+                anxietyHistory: []
+            },
+            journalEntries: [],
+            weeklySummaries: [],
+            reminders: {
+                daily: false,
+                weekly: false
+            }
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('psychoanalysisData');
+                if (savedData) {
+                    appData = { ...appData, ...JSON.parse(savedData) };
+                    updateDashboard();
+                    updateProgressBar();
+                    initializeDailyTracker();
+                    loadJournalEntries();
+                    loadWeeklySummaries();
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('psychoanalysisData', JSON.stringify(appData));
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hide all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Mark button as active
+            event.target.classList.add('active');
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const totalExercises = 10;
+            const completed = appData.progress.completedExercises;
+            const percentage = Math.min((completed / totalExercises) * 100, 100);
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) {
+                progressFill.style.width = percentage + '%';
+            }
+        }
+
+        // Update dashboard stats
+        function updateDashboard() {
+            const elements = {
+                completedDays: document.getElementById('completedDays'),
+                currentStreak: document.getElementById('currentStreak'),
+                completedExercises: document.getElementById('completedExercises'),
+                avgAnxiety: document.getElementById('avgAnxiety')
+            };
+
+            if (elements.completedDays) {
+                elements.completedDays.textContent = appData.progress.completedDays;
+            }
+            if (elements.currentStreak) {
+                elements.currentStreak.textContent = appData.progress.currentStreak;
+            }
+            if (elements.completedExercises) {
+                elements.completedExercises.textContent = appData.progress.completedExercises;
+            }
+            
+            // Calculate average anxiety
+            if (elements.avgAnxiety && appData.progress.anxietyHistory.length > 0) {
+                const avg = appData.progress.anxietyHistory.reduce((a, b) => a + b, 0) / appData.progress.anxietyHistory.length;
+                elements.avgAnxiety.textContent = avg.toFixed(1);
+            }
+        }
+
+        // Initialize daily tracker
+        function initializeDailyTracker() {
+            const tracker = document.getElementById('dailyTracker');
+            if (!tracker) return;
+            
+            tracker.innerHTML = '';
+            
+            for (let i = 0; i < 28; i++) {
+                const day = document.createElement('div');
+                day.className = 'day-cell';
+                day.textContent = i + 1;
+                
+                const today = new Date().getDate();
+                if (i + 1 === today) {
+                    day.classList.add('current');
+                }
+                
+                if (appData.progress.dailyEntries.includes(i + 1)) {
+                    day.classList.add('completed');
+                }
+                
+                tracker.appendChild(day);
+            }
+        }
+
+        // Add entry to journal
+        function addJournalEntry(type, title, content, data = {}) {
+            const entry = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                type: type,
+                title: title,
+                content: content,
+                data: data
+            };
+            
+            if (!appData.journalEntries) {
+                appData.journalEntries = [];
+            }
+            
+            appData.journalEntries.unshift(entry);
+            saveData();
+            loadJournalEntries();
+        }
+
+        // Load and display journal entries
+        function loadJournalEntries() {
+            const container = document.getElementById('journalEntries');
+            if (!container) return;
+            
+            if (!appData.journalEntries || appData.journalEntries.length === 0) {
+                container.innerHTML = '<div class="no-entries">Записей пока нет. Начните заполнять разделы!</div>';
+                return;
+            }
+            
+            let html = '';
+            appData.journalEntries.forEach(entry => {
+                const date = new Date(entry.date).toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="journal-entry" data-type="${entry.type}">
+                        <div class="journal-date">
+                            <span class="journal-type">${getTypeLabel(entry.type)}</span>
+                            ${date}
+                        </div>
+                        <div class="journal-content">
+                            <strong>${entry.title}</strong><br>
+                            ${entry.content}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Get type label for journal entries
+        function getTypeLabel(type) {
+            const labels = {
+                'daily': 'Ежедневная запись',
+                'defense': 'Защитные механизмы',
+                'symbols': 'Символы',
+                'diagnosis': 'Диагностика',
+                'goals': 'Цели',
+                'plan': 'План'
+            };
+            return labels[type] || type;
+        }
+
+        // Filter journal by type
+        function filterJournalByType(type) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const entries = document.querySelectorAll('.journal-entry');
+            entries.forEach(entry => {
+                if (type === 'all' || entry.dataset.type === type) {
+                    entry.style.display = 'block';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter journal by search
+        function filterJournal() {
+            const searchTerm = document.getElementById('journalSearch').value.toLowerCase();
+            const entries = document.querySelectorAll('.journal-entry');
+            
+            entries.forEach(entry => {
+                const content = entry.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    entry.style.display = 'block';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+        }
+
+        // Generate weekly summary
+        function generateWeeklySummary() {
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+            
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+            
+            // Filter entries from this week
+            const weekEntries = appData.journalEntries ? appData.journalEntries.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate >= weekStart && entryDate < weekEnd;
+            }) : [];
+            
+            // Calculate stats
+            const anxietyThisWeek = appData.progress.anxietyHistory.slice(-7);
+            const avgAnxiety = anxietyThisWeek.length > 0 ? 
+                (anxietyThisWeek.reduce((a, b) => a + b, 0) / anxietyThisWeek.length).toFixed(1) : 'н/д';
+            
+            // Group entries by type
+            const entriesByType = {};
+            weekEntries.forEach(entry => {
+                if (!entriesByType[entry.type]) {
+                    entriesByType[entry.type] = [];
+                }
+                entriesByType[entry.type].push(entry);
+            });
+            
+            // Create summary
+            const summary = {
+                id: Date.now(),
+                weekStart: weekStart.toISOString(),
+                weekEnd: weekEnd.toISOString(),
+                totalEntries: weekEntries.length,
+                avgAnxiety: avgAnxiety,
+                entriesByType: entriesByType,
+                keyInsights: generateKeyInsights(weekEntries),
+                created: new Date().toISOString()
+            };
+            
+            if (!appData.weeklySummaries) {
+                appData.weeklySummaries = [];
+            }
+            
+            appData.weeklySummaries.unshift(summary);
+            saveData();
+            loadWeeklySummaries();
+            showToast('Сводка за неделю создана!');
+        }
+
+        // Generate key insights
+        function generateKeyInsights(entries) {
+            const insights = [];
+            
+            // Count entries by type
+            const typeCount = {};
+            entries.forEach(entry => {
+                typeCount[entry.type] = (typeCount[entry.type] || 0) + 1;
+            });
+            
+            // Most active area
+            const mostActive = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0];
+            if (mostActive) {
+                insights.push(`Больше всего работали с: ${getTypeLabel(mostActive[0])} (${mostActive[1]} записей)`);
+            }
+            
+            if (entries.length === 0) {
+                insights.push('На этой неделе записей не было - время активнее заниматься самопознанием!');
+            } else if (entries.length >= 7) {
+                insights.push('Отличная активность! Делали записи почти каждый день');
+            }
+            
+            return insights;
+        }
+
+        // Load weekly summaries
+        function loadWeeklySummaries() {
+            const container = document.getElementById('weeklySummaries');
+            if (!container) return;
+            
+            if (!appData.weeklySummaries || appData.weeklySummaries.length === 0) {
+                container.innerHTML = '<div class="no-entries">Сводок пока нет. Создайте первую!</div>';
+                return;
+            }
+            
+            let html = '';
+            appData.weeklySummaries.forEach(summary => {
+                const weekStart = new Date(summary.weekStart).toLocaleDateString('ru-RU');
+                const weekEnd = new Date(summary.weekEnd).toLocaleDateString('ru-RU');
+                
+                html += `
+                    <div class="weekly-summary">
+                        <div class="summary-title">Сводка ${weekStart} - ${weekEnd}</div>
+                        
+                        <div class="summary-section">
+                            <div class="summary-label">Общая активность:</div>
+                            Всего записей: ${summary.totalEntries}<br>
+                            Средняя тревожность: ${summary.avgAnxiety}/10
+                        </div>
+                        
+                        <div class="summary-section">
+                            <div class="summary-label">Активность по разделам:</div>
+                            ${Object.entries(summary.entriesByType).map(([type, entries]) => 
+                                `${getTypeLabel(type)}: ${entries.length} записей`
+                            ).join('<br>') || 'Записей не было'}
+                        </div>
+                        
+                        <div class="summary-section">
+                            <div class="summary-label">Ключевые инсайты:</div>
+                            ${summary.keyInsights.map(insight => `• ${insight}`).join('<br>')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Checkbox toggle
+        function toggleCheckbox(id) {
+            const checkbox = document.getElementById(id + 'Check');
+            if (checkbox) {
+                checkbox.classList.toggle('checked');
+            }
+        }
+
+        // Save daily entry
+        function saveDailyEntry() {
+            const anxietySlider = document.getElementById('todayAnxiety');
+            const notesField = document.getElementById('todayNotes');
+            
+            if (!anxietySlider || !notesField) return;
+            
+            const anxiety = anxietySlider.value;
+            const notes = notesField.value;
+            const today = new Date().getDate();
+            
+            appData.progress.anxietyHistory.push(parseInt(anxiety));
+            if (!appData.progress.dailyEntries.includes(today)) {
+                appData.progress.dailyEntries.push(today);
+                appData.progress.completedDays++;
+                
+                // Update streak
+                if (appData.progress.dailyEntries.includes(today - 1) || today === 1) {
+                    appData.progress.currentStreak++;
+                } else {
+                    appData.progress.currentStreak = 1;
+                }
+            }
+            
+            // Add to journal
+            addJournalEntry('daily', 
+                `Запись дня - тревога ${anxiety}/10`, 
+                notes || 'Без заметок',
+                { anxiety: anxiety }
+            );
+            
+            saveData();
+            updateDashboard();
+            initializeDailyTracker();
+            showToast('Запись дня сохранена!');
+        }
+
+        // Save diagnosis
+        function saveDiagnosis() {
+            const careerSat = document.getElementById('careerSat');
+            const relationshipSat = document.getElementById('relationshipSat');
+            const careerNotes = document.getElementById('careerNotes');
+            const relationshipNotes = document.getElementById('relationshipNotes');
+            
+            if (!careerSat || !relationshipSat) return;
+            
+            const diagnosisText = `Карьера: ${careerSat.value}/10 (${careerNotes?.value || ''}), Отношения: ${relationshipSat.value}/10 (${relationshipNotes?.value || ''})`;
+            
+            addJournalEntry('diagnosis', 'Входная диагностика', diagnosisText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Диагностика сохранена!');
+        }
+
+        // Save goals
+        function saveGoals() {
+            const goal1 = document.getElementById('goal1');
+            const goal2 = document.getElementById('goal2');
+            const goal1Reasons = document.getElementById('goal1Reasons');
+            const goal2Reasons = document.getElementById('goal2Reasons');
+            
+            if (!goal1 || !goal2) return;
+            
+            const goalsText = `1. ${goal1.value} (причины: ${goal1Reasons?.value || 'не указаны'}) 2. ${goal2.value} (причины: ${goal2Reasons?.value || 'не указаны'})`;
+            
+            addJournalEntry('goals', 'Застрявшие цели', goalsText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Цели сохранены!');
+        }
+
+        // Add defense entry
+        function addDefenseEntry() {
+            const reason = document.getElementById('defenseReason');
+            const reaction = document.getElementById('defenseReaction');
+            
+            if (!reason || !reaction) return;
+            
+            const reasonText = reason.value;
+            const reactionText = reaction.value;
+            
+            if (!reasonText.trim() || !reactionText.trim()) {
+                showToast('Заполните все поля');
+                return;
+            }
+            
+            addJournalEntry('defense', 
+                'Защитная реакция', 
+                `Ситуация: ${reasonText}. Реакция: ${reactionText}`
+            );
+            
+            // Clear form
+            reason.value = '';
+            reaction.value = '';
+            
+            saveData();
+            showToast('Запись о защитной реакции добавлена!');
+        }
+
+        // Save defense analysis
+        function saveDefenseAnalysis() {
+            const defenses = [];
+            ['denial', 'projection', 'rationalization'].forEach(defense => {
+                const checkbox = document.getElementById(defense + 'Check');
+                if (checkbox && checkbox.classList.contains('checked')) {
+                    defenses.push(defense);
+                }
+            });
+            
+            const defenseText = defenses.length > 0 ? 
+                `Выявленные защиты: ${defenses.join(', ')}` : 
+                'Защиты не выбраны';
+            
+            addJournalEntry('defense', 'Анализ защитных механизмов', defenseText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Анализ защит сохранен!');
+        }
+
+        // Add symbol entry
+        function addSymbolEntry() {
+            const dream = document.getElementById('todayDream');
+            const dreamEmotion = document.getElementById('dreamEmotion');
+            const slips = document.getElementById('slipsOfTongue');
+            
+            if (!dream || !dreamEmotion || !slips) return;
+            
+            const symbolText = `Сон: ${dream.value || 'не помню'}. Эмоция: ${dreamEmotion.value || 'нейтральная'}. Оговорки: ${slips.value || 'не было'}`;
+            
+            addJournalEntry('symbols', 'Символическая запись дня', symbolText);
+            
+            // Clear form
+            dream.value = '';
+            dreamEmotion.value = '';
+            slips.value = '';
+            
+            saveData();
+            showToast('Символическая запись добавлена!');
+        }
+
+        // Save monthly plan
+        function saveMonthlyPlan() {
+            const monthFocus = document.getElementById('monthFocus');
+            const week1Action = document.getElementById('week1Action');
+            const week2Action = document.getElementById('week2Action');
+            
+            if (!monthFocus || !week1Action || !week2Action) return;
+            
+            const planText = `Фокус: ${monthFocus.value}. Неделя 1: ${week1Action.value}. Неделя 2: ${week2Action.value}`;
+            
+            addJournalEntry('plan', 'Месячный план трансформации', planText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('План месяца сохранен!');
+        }
+
+        // Emergency techniques
+        function startBreathingExercise() {
+            const guide = document.getElementById('breathingGuide');
+            const circle = document.getElementById('breathingCircle');
+            
+            if (!guide || !circle) return;
+            
+            guide.style.display = 'block';
+            
+            let step = 0;
+            const steps = ['Вдох 4', 'Задержка 7', 'Выдох 8', 'Пауза'];
+            const durations = [4000, 7000, 8000, 1000];
+            
+            function breathingCycle() {
+                circle.textContent = steps[step];
+                
+                setTimeout(() => {
+                    step = (step + 1) % 4;
+                    if (guide.style.display !== 'none') {
+                        breathingCycle();
+                    }
+                }, durations[step]);
+            }
+            
+            breathingCycle();
+        }
+
+        function stopBreathingExercise() {
+            const guide = document.getElementById('breathingGuide');
+            if (guide) {
+                guide.style.display = 'none';
+            }
+        }
+
+        function show54321Technique() {
+            const technique = document.getElementById('technique54321');
+            if (technique) {
+                technique.style.display = 'block';
+            }
+        }
+
+        function hide54321Technique() {
+            const technique = document.getElementById('technique54321');
+            if (technique) {
+                technique.style.display = 'none';
+            }
+        }
+
+        function showProgressReminder() {
+            const completedDays = appData.progress.completedDays;
+            const completedExercises = appData.progress.completedExercises;
+            
+            showToast(`Вы уже прошли ${completedDays} дней практики и выполнили ${completedExercises} упражнений. Это большой прогресс!`);
+        }
+
+        // Setup sliders for all satisfaction scales
+        function setupSliders() {
+            const sliders = [
+                'todayAnxiety', 'careerSat', 'relationshipSat', 'familySat', 
+                'healthSat', 'financeSat', 'growthSat', 'creativitySat',
+                'barrier1Readiness', 'barrier2Readiness', 'barrier3Readiness'
+            ];
+            
+            sliders.forEach(sliderId => {
+                const slider = document.getElementById(sliderId);
+                const valueId = sliderId.replace('Sat', 'Value').replace('Readiness', 'Value').replace('Anxiety', 'Value');
+                const valueDisplay = document.getElementById(valueId);
+                
+                if (slider && valueDisplay) {
+                    slider.addEventListener('input', function() {
+                        valueDisplay.textContent = this.value;
+                    });
+                }
+            });
+        }
+
+        // Save complete diagnosis
+        function saveDiagnosis() {
+            const areas = ['career', 'relationship', 'family', 'health', 'finance', 'growth', 'creativity'];
+            let diagnosisText = 'Диагностика удовлетворенности: ';
+            
+            areas.forEach(area => {
+                const satSlider = document.getElementById(area + 'Sat');
+                const notesField = document.getElementById(area + 'Notes');
+                if (satSlider) {
+                    const satisfaction = satSlider.value;
+                    const notes = notesField ? notesField.value : '';
+                    diagnosisText += `${getAreaLabel(area)}: ${satisfaction}/10`;
+                    if (notes) diagnosisText += ` (${notes})`;
+                    diagnosisText += '; ';
+                }
+            });
+            
+            addJournalEntry('diagnosis', 'Полная диагностика жизненных сфер', diagnosisText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Диагностика сохранена!');
+        }
+
+        // Get area label
+        function getAreaLabel(area) {
+            const labels = {
+                'career': 'Карьера',
+                'relationship': 'Отношения',
+                'family': 'Семья',
+                'health': 'Здоровье',
+                'finance': 'Финансы',
+                'growth': 'Рост',
+                'creativity': 'Творчество'
+            };
+            return labels[area] || area;
+        }
+
+        // Save complete goals
+        function saveGoals() {
+            let goalsText = 'Застрявшие цели: ';
+            
+            for (let i = 1; i <= 3; i++) {
+                const goal = document.getElementById(`goal${i}`);
+                const time = document.getElementById(`goal${i}Time`);
+                const reasons = document.getElementById(`goal${i}Reasons`);
+                
+                if (goal && goal.value) {
+                    goalsText += `${i}. ${goal.value}`;
+                    if (time && time.value) goalsText += ` (застряла: ${time.value})`;
+                    if (reasons && reasons.value) goalsText += ` - причины: ${reasons.value}`;
+                    goalsText += '; ';
+                }
+            }
+            
+            addJournalEntry('goals', 'Анализ застрявших целей', goalsText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Цели сохранены!');
+        }
+
+        // Save barrier hypotheses
+        function saveBarrierHypotheses() {
+            let hypothesesText = 'Гипотезы о внутренних барьерах: ';
+            
+            for (let i = 1; i <= 3; i++) {
+                const hypothesis = document.getElementById(`barrier${i}Hypothesis`);
+                if (hypothesis && hypothesis.value) {
+                    hypothesesText += `К цели ${i}: ${hypothesis.value}; `;
+                }
+            }
+            
+            addJournalEntry('diagnosis', 'Первые гипотезы о барьерах', hypothesesText);
+            saveData();
+            showToast('Гипотезы о барьерах сохранены!');
+        }
+
+        // Enhanced defense analysis
+        function saveDefenseAnalysis() {
+            const defenses = [];
+            const defenseTypes = ['denial', 'projection', 'rationalization', 'avoidance', 'regression', 'displacement', 'sublimation'];
+            
+            defenseTypes.forEach(defense => {
+                const checkbox = document.getElementById(defense + 'Check');
+                if (checkbox && checkbox.classList.contains('checked')) {
+                    defenses.push(defense);
+                }
+            });
+            
+            const mainDefense = document.getElementById('mainDefense');
+            const defenseFunction = document.getElementById('defenseFunction');
+            
+            let analysisText = `Анализ защитных механизмов: `;
+            if (defenses.length > 0) {
+                analysisText += `Выявленные защиты: ${defenses.join(', ')}. `;
+            }
+            if (mainDefense && mainDefense.value) {
+                analysisText += `Главная защита: ${mainDefense.value}. `;
+            }
+            if (defenseFunction && defenseFunction.value) {
+                analysisText += `Функция: ${defenseFunction.value}`;
+            }
+            
+            addJournalEntry('defense', 'Анализ защитных механизмов', analysisText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Анализ защит сохранен!');
+        }
+
+        // Start experiment
+        function startExperiment() {
+            const alternative = document.getElementById('alternativeReaction');
+            const situation = document.getElementById('experimentSituation');
+            const action = document.getElementById('experimentAction');
+            const date = document.getElementById('experimentDate');
+            
+            if (!alternative || !situation || !action) return;
+            
+            const experimentText = `Эксперимент с новой реакцией: вместо обычной защиты буду ${alternative.value}. Ситуация: ${situation.value}. Действие: ${action.value}. Дата: ${date ? date.value : 'не указана'}`;
+            
+            addJournalEntry('defense', 'Начало эксперимента с новой реакцией', experimentText);
+            saveData();
+            showToast('Эксперимент запланирован! Удачи!');
+        }
+
+        // Analyze symbols
+        function analyzeSymbols() {
+            const dreamImages = document.getElementById('repeatingDreamImages');
+            const slips = document.getElementById('repeatingSlips');
+            const attention = document.getElementById('repeatingAttention');
+            
+            let analysisText = 'Анализ повторяющихся символов: ';
+            if (dreamImages && dreamImages.value) {
+                analysisText += `Образы в снах: ${dreamImages.value}. `;
+            }
+            if (slips && slips.value) {
+                analysisText += `Темы оговорок: ${slips.value}. `;
+            }
+            if (attention && attention.value) {
+                analysisText += `Привлекает внимание: ${attention.value}`;
+            }
+            
+            addJournalEntry('symbols', 'Анализ повторяющихся символов', analysisText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Анализ символов сохранен!');
+        }
+
+        // Save symbol analysis
+        function saveSymbolAnalysis() {
+            const symbol = document.getElementById('selectedSymbol');
+            const emotion = document.getElementById('symbolEmotion');
+            const parallel = document.getElementById('symbolParallel');
+            const hypothesis = document.getElementById('symbolHypothesis');
+            const experiment = document.getElementById('symbolExperiment');
+            
+            let analysisText = 'Расшифровка символа: ';
+            if (symbol && symbol.value) analysisText += `Символ: ${symbol.value}. `;
+            if (emotion && emotion.value) analysisText += `Эмоция: ${emotion.value}. `;
+            if (parallel && parallel.value) analysisText += `Параллель в жизни: ${parallel.value}. `;
+            if (hypothesis && hypothesis.value) analysisText += `Гипотеза: ${hypothesis.value}. `;
+            if (experiment && experiment.value) analysisText += `Эксперимент: ${experiment.value}`;
+            
+            addJournalEntry('symbols', 'Расшифровка символа', analysisText);
+            saveData();
+            showToast('Расшифровка символа сохранена!');
+        }
+
+        // Choose barrier for work
+        function chooseBarrier() {
+            const chosenBarrier = document.getElementById('chosenBarrier');
+            const reason = document.getElementById('barrierReason');
+            
+            if (!chosenBarrier || !reason) return;
+            
+            const choiceText = `Выбор барьера для работы: ${chosenBarrier.value}. Обоснование: ${reason.value}`;
+            
+            addJournalEntry('plan', 'Выбор фокуса для трансформации', choiceText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('Барьер выбран для работы!');
+        }
+
+        // Save complete monthly plan
+        function saveMonthlyPlan() {
+            const monthFocus = document.getElementById('monthFocus');
+            let planText = 'Месячный план трансформации: ';
+            
+            if (monthFocus && monthFocus.value) {
+                planText += `Фокус: ${monthFocus.value}. `;
+            }
+            
+            for (let i = 1; i <= 4; i++) {
+                const action = document.getElementById(`week${i}Action`);
+                const deadline = document.getElementById(`week${i}Deadline`);
+                const success = document.getElementById(`week${i}Success`);
+                
+                if (action && action.value) {
+                    planText += `Неделя ${i}: ${action.value}`;
+                    if (deadline && deadline.value) planText += ` (до ${deadline.value})`;
+                    if (success && success.value) planText += ` - критерий: ${success.value}`;
+                    planText += '. ';
+                }
+            }
+            
+            addJournalEntry('plan', 'Месячный план трансформации', planText);
+            
+            appData.progress.completedExercises++;
+            saveData();
+            updateProgressBar();
+            showToast('План месяца сохранен!');
+        }
+
+        // Save support system
+        function saveSupportSystem() {
+            const supportPerson = document.getElementById('supportPerson');
+            const reminders = document.getElementById('reminders');
+            const relapsePlan = document.getElementById('relapsePlan');
+            
+            let supportText = 'Система поддержки: ';
+            if (supportPerson && supportPerson.value) supportText += `Поддержка: ${supportPerson.value}. `;
+            if (reminders && reminders.value) supportText += `Напоминания: ${reminders.value}. `;
+            if (relapsePlan && relapsePlan.value) supportText += `При срывах: ${relapsePlan.value}`;
+            
+            addJournalEntry('plan', 'Настройка системы поддержки', supportText);
+            saveData();
+            showToast('Система поддержки настроена!');
+        }
+
+        // Additional emergency techniques
+        function showSelfCompassion() {
+            const card = document.getElementById('selfCompassionCard');
+            if (card) card.style.display = 'block';
+        }
+
+        function hideSelfCompassion() {
+            const card = document.getElementById('selfCompassionCard');
+            if (card) card.style.display = 'none';
+        }
+
+        function showBodyRelaxation() {
+            const card = document.getElementById('bodyRelaxationCard');
+            if (card) card.style.display = 'block';
+        }
+
+        function hideBodyRelaxation() {
+            const card = document.getElementById('bodyRelaxationCard');
+            if (card) card.style.display = 'none';
+        }
+
+        // Save emergency contacts
+        function saveEmergencyContacts() {
+            const personal = document.getElementById('emergencyContact');
+            const professional = document.getElementById('professionalContact');
+            const hotline = document.getElementById('hotlineContact');
+            
+            appData.emergencyContacts = {
+                personal: personal ? personal.value : '',
+                professional: professional ? professional.value : '',
+                hotline: hotline ? hotline.value : ''
+            };
+            
+            saveData();
+            showToast('Контакты сохранены!');
+        }
+
+        // Export functions
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            downloadFile('psychoanalysis_data.json', dataStr, 'application/json');
+            showToast('Все данные экспортированы!');
+        }
+
+        function exportProgress() {
+            const progressReport = generateProgressReport();
+            downloadFile('progress_report.txt', progressReport, 'text/plain');
+            showToast('Отчет о прогрессе экспортирован!');
+        }
+
+        function exportJournalOnly() {
+            if (!appData.journalEntries || appData.journalEntries.length === 0) {
+                showToast('Журнал пуст!');
+                return;
+            }
+            
+            let journalText = 'ЖУРНАЛ ЗАПИСЕЙ\n=================\n\n';
+            appData.journalEntries.forEach(entry => {
+                const date = new Date(entry.date).toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                journalText += `${date} - ${getTypeLabel(entry.type)}\n`;
+                journalText += `${entry.title}\n`;
+                journalText += `${entry.content}\n\n`;
+            });
+            
+            downloadFile('journal.txt', journalText, 'text/plain');
+            showToast('Журнал экспортирован!');
+        }
+
+        function generateProgressReport() {
+            const avgAnxiety = appData.progress.anxietyHistory.length > 0 ? 
+                (appData.progress.anxietyHistory.reduce((a, b) => a + b, 0) / appData.progress.anxietyHistory.length).toFixed(1) : 'н/д';
+            
+            return `ОТЧЕТ О ПРОГРЕССЕ
+=================
+
+Общая статистика:
+- Дней практики: ${appData.progress.completedDays}
+- Текущая серия: ${appData.progress.currentStreak}
+- Выполнено упражнений: ${appData.progress.completedExercises}
+- Средняя тревожность: ${avgAnxiety}/10
+- Всего записей в журнале: ${appData.journalEntries ? appData.journalEntries.length : 0}
+- Еженедельных сводок: ${appData.weeklySummaries ? appData.weeklySummaries.length : 0}
+
+Активность по разделам:
+${getActivityByType()}
+
+Последние записи:
+${getRecentEntries()}
+            `;
+        }
+
+        function getActivityByType() {
+            if (!appData.journalEntries) return 'Записей нет';
+            
+            const typeCount = {};
+            appData.journalEntries.forEach(entry => {
+                typeCount[entry.type] = (typeCount[entry.type] || 0) + 1;
+            });
+            
+            return Object.entries(typeCount)
+                .map(([type, count]) => `- ${getTypeLabel(type)}: ${count} записей`)
+                .join('\n');
+        }
+
+        function getRecentEntries() {
+            if (!appData.journalEntries || appData.journalEntries.length === 0) {
+                return 'Записей нет';
+            }
+            
+            return appData.journalEntries
+                .slice(0, 5)
+                .map(entry => {
+                    const date = new Date(entry.date).toLocaleDateString('ru-RU');
+                    return `- ${date}: ${entry.title}`;
+                })
+                .join('\n');
+        }
+
+        function downloadFile(filename, content, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize app when page loads
+        function initializeApp() {
+            loadData();
+            setupSliders();
+            
+            // Set up Telegram WebApp main button
+            if (tg && tg.MainButton) {
+                tg.MainButton.setText('Сохранить прогресс');
+                tg.MainButton.onClick(function() {
+                    saveData();
+                    showToast('Прогресс сохранен!');
+                });
+                tg.MainButton.show();
+            }
+            
+            // Auto-save every 5 minutes
+            setInterval(saveData, 300000);
+        }
+
+        // Handle page visibility change to save data
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                saveData();
+            }
+        });
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        
+        // Fallback initialization
+        window.addEventListener('load', initializeApp);
+    </script>
+</body>
+</html>
